@@ -1,0 +1,21 @@
+# --- Frontend (Node/React/Vue) ---
+node_modules/
+dist/
+.env
+.DS_Store
+
+# --- Backend (Java/Spring Boot) ---
+target/
+*.class
+*.jar
+*.war
+.mtl.xml
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+
+# --- Docker & OS ---
+*.log
+.docker-volumes/
