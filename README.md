@@ -1,2 +1,2 @@
-# Syst-me-de-R-servation-des-Salles
+# univ-dschang-room-reservation
 Système de réservation de salles pour l'Université de Dschang
