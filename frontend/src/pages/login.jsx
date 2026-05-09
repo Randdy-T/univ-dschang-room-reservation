@@ -1,22 +1,64 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulation de l'appel GraphQL pour plus tard
-    console.log("Tentative de connexion avec :", { email, password });
-    
-    setTimeout(() => {
-      setIsLoading(false);
-      alert("Connexion réussie (Simulation). Bienvenue sur le portail de l'Univ-Dschang !");
-    }, 1500);
+  e.preventDefault();
+  setIsLoading(true);
+  console.log("1. Le bouton a été cliqué !");
+  setIsLoading(true);
+  // SIMULATION DU BACKEND
+  // Ici, on imagine que le serveur nous renvoie ces infos
+  const mockUserResponse = {
+    email: email,
+    role: "ETUDIANT", // Ici tu peux tester en changeant par "ETUDIANT" ou "ADMIN"
+    nom: "Tagne"
   };
+
+  setTimeout(() => {
+    setIsLoading(false);
+    
+    /*//LA NAVIGATION AUTOMATIQUE
+    if (userRole === "ADMIN") {
+        navigate('/admin'); // Envoie vers l'espace Admin
+    } else if (userRole === "ENSEIGNANT") {
+        navigate('/teacher'); // Envoie vers l'espace Enseignant
+    } else if (userRole === "ETUDIANT") {
+        navigate('/student'); // Envoie vers l'espace Étudiant
+    }*/
+     console.log("2. Les 1.5 secondes sont passées");
+    setIsLoading(false);
+    
+    console.log("3. Tentative de navigation vers /admin...");
+    navigate('/admin'); 
+     // Ajoute cette alerte pour être sûr
+    alert("La redirection devrait se lancer maintenant !");
+    // REDIRECTION SELON LE RÔLE
+    switch(mockUserResponse.role) {
+      case 'ENSEIGNANT':
+        navigate('/teacher');
+        break;
+      case 'ETUDIANT':
+        navigate('/student');
+        break;
+      case 'ADMIN':
+        navigate('/admin');
+        break;
+      case 'DOYEN':
+        navigate('/dean');
+        break;
+      default:
+        alert("Rôle non reconnu");
+        navigate('/');
+    }
+
+  }, 1500);
+};
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
