@@ -16,7 +16,7 @@ const Login = () => {
   // Ici, on imagine que le serveur nous renvoie ces infos
   const mockUserResponse = {
     email: email,
-    role: "ENSEIGNANT", // Ici tu peux tester en changeant par "ETUDIANT" ou "ADMIN"
+    role: "ETUDIANT", // Ici tu peux tester en changeant par "ETUDIANT" ou "ADMIN"
     nom: "Tagne"
   };
 

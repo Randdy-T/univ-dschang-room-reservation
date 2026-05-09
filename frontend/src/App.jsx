@@ -3,6 +3,8 @@ import Login from './pages/Login';
 import DashboardLayout from './layouts/DashboardLayout';
 import TeacherHome from './pages/teacher/TeacherHome';
 import SearchRooms from './pages/teacher/SearchRooms';
+import ImportStudents from './pages/admin/ImportStudents';
+import StudentHome from './pages/student/StudentHome';
 
 function App() {
   // 1. Définition des menus par rôle
@@ -37,7 +39,7 @@ function App() {
 
         {/* ESPACE ÉTUDIANT */}
         <Route path="/student" element={<DashboardLayout role="ETUDIANT" menuItems={studentMenu} />}>
-          <Route index element={<div className="p-6 bg-white rounded-xl shadow">Page d'accueil Étudiant (En construction...)</div>} />
+          <Route index element={<StudentHome />} />
         </Route>
 
         {/* ESPACE ADMIN */}
@@ -51,6 +53,7 @@ function App() {
               </div>
             </div>
           } />
+          <Route path="import" element={<ImportStudents />} />
         </Route>
 
       </Routes>
