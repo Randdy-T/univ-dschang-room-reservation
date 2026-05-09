@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import DashboardLayout from './layouts/DashboardLayout';
 import TeacherHome from './pages/teacher/TeacherHome';
+import SearchRooms from './pages/teacher/SearchRooms';
 
 function App() {
   // 1. Définition des menus par rôle
@@ -31,6 +32,7 @@ function App() {
         {/* ESPACE ENSEIGNANT */}
         <Route path="/teacher" element={<DashboardLayout role="ENSEIGNANT" menuItems={teacherMenu} />}>
           <Route index element={<TeacherHome />} />
+          <Route path="reserve" element={<SearchRooms />} />
         </Route>
 
         {/* ESPACE ÉTUDIANT */}
