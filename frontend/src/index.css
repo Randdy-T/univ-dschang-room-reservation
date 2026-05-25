@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-univ-blue: #003366;
-  --color-univ-green: #008000;
+  --color-uds-blue: #1E3A5F;
+  --color-uds-blue-light: #2E5490;
+  --color-uds-orange: #F97316;
+  --color-uds-orange-light: #FB923C;
+  --color-uds-gray: #F4F6F9;
+  --color-uds-gray-dark: #64748B;
 }

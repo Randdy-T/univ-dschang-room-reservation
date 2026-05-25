@@ -1,122 +1,298 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, MapPin, Users, Filter, CheckCircle, XCircle, Wrench, ArrowRight, CalendarPlus } from 'lucide-react';
 
-const SearchRooms = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  const rooms = [
-    { id: 1, name: "Amphi 1000", campus: "Campus A", cap: 1000, amenities: ['wifi', 'projector', 'mic'], schedule: [8, 9, 12, 13, 14, 18] },
-    { id: 2, name: "Salle de Conférence", campus: "Campus C", cap: 150, amenities: ['ac', 'projector'], schedule: [10, 11, 15, 16] },
-    { id: 3, name: "Labo Recherche", campus: "Campus B", cap: 25, amenities: ['wifi', 'pc'], schedule: [8, 9, 10, 11, 12, 13] },
-  ];
+const ROOM_TYPES = [
+  { value: '', label: 'Tous les types' },
+  { value: 'AMPHITHEATRE', label: 'Amphithéâtre' },
+  { value: 'CLASSROOM', label: 'Salle de cours' },
+  { value: 'LABORATORY', label: 'Laboratoire' },
+];
 
-  return (
-    <div className="flex gap-8 h-full animate-in slide-in-from-bottom-10 duration-700">
-      
-      {/* 1. SIDEBAR DE FILTRES AVANCÉS */}
-      <aside className="w-80 bg-white rounded-3xl shadow-2xl p-6 hidden xl:block border border-gray-100 sticky top-0 h-fit">
-        <h2 className="text-xl font-black text-univ-blue mb-6">Filtres Précis</h2>
-        
-        <div className="space-y-8">
-          <div>
-            <label className="text-xs font-black uppercase text-gray-400 mb-3 block">Capacité Minimale</label>
-            <input type="range" min="10" max="1000" className="w-full accent-univ-blue" />
-            <div className="flex justify-between text-xs font-bold text-gray-500 mt-2">
-              <span>10 places</span>
-              <span>1000+</span>
-            </div>
-          </div>
-
-          <div>
-            <label className="text-xs font-black uppercase text-gray-400 mb-3 block">Équipements Requis</label>
-            <div className="grid grid-cols-2 gap-2">
-              {['Vidéoproj', 'Wifi', 'Clim', 'Micro', 'Labo PC'].map(item => (
-                <label key={item} className="flex items-center gap-2 p-2 rounded-xl border border-gray-100 hover:bg-blue-50 cursor-pointer transition-all">
-                  <input type="checkbox" className="rounded text-univ-blue" />
-                  <span className="text-xs font-semibold text-gray-600">{item}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* 2. ZONE PRINCIPALE */}
-      <div className="flex-1 space-y-8">
-        
-        {/* HEADER & SEARCH BAR */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-black text-gray-900 tracking-tight">Espace Réservation</h1>
-            <p className="text-univ-green font-bold text-sm">3 Campus • 124 Salles connectées</p>
-          </div>
-          <div className="relative group">
-            <input 
-              type="text" 
-              placeholder="Chercher une salle par nom..."
-              className="pl-12 pr-6 py-4 bg-white border-none rounded-2xl shadow-lg w-full md:w-80 focus:ring-2 focus:ring-univ-blue transition-all"
-            />
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-          </div>
-        </div>
-
-        {/* GRILLE DE RÉSULTATS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {rooms.map((room) => (
-            <div key={room.id} className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 flex flex-col">
-              
-              {/* IMAGE / HEADER DE LA CARTE */}
-              <div className="h-40 bg-gradient-to-br from-univ-blue to-blue-900 p-6 relative flex flex-col justify-end">
-                <div className="absolute top-4 right-4 flex gap-2">
-                   {room.amenities.map(a => (
-                     <span key={a} className="bg-white/20 backdrop-blur-md p-2 rounded-lg text-white text-xs">
-                        {a === 'wifi' && '📶'} {a === 'projector' && '📽️'} {a === 'ac' && '❄️'} {a === 'pc' && '💻'}
-                     </span>
-                   ))}
-                </div>
-                <h3 className="text-2xl font-bold text-white">{room.name}</h3>
-                <p className="text-blue-200 text-xs font-bold uppercase tracking-widest">{room.campus}</p>
-              </div>
-
-              {/* DÉTAILS ET TIMELINE */}
-              <div className="p-6 space-y-6">
-                <div className="flex justify-between items-center">
-                   <div className="flex items-center gap-2">
-                      <span className="p-2 bg-gray-100 rounded-lg text-lg">👥</span>
-                      <div>
-                        <p className="text-[10px] font-black text-gray-400 uppercase">Capacité</p>
-                        <p className="text-sm font-black text-univ-blue">{room.cap} Personnes</p>
-                      </div>
-                   </div>
-                   <div className="text-right">
-                      <p className="text-[10px] font-black text-gray-400 uppercase">État actuel</p>
-                      <p className="text-sm font-black text-univ-green">● Libre</p>
-                   </div>
-                </div>
-
-                {/* LA TIMELINE (L'élément WOW) */}
-                <div>
-                  <p className="text-[10px] font-black text-gray-400 uppercase mb-3">Occupation aujourd'hui (8h - 18h)</p>
-                  <div className="flex h-3 bg-gray-100 rounded-full overflow-hidden border border-gray-50">
-                    {[8,9,10,11,12,13,14,15,16,17,18].map(h => (
-                      <div 
-                        key={h}
-                        className={`flex-1 border-r border-white/50 ${room.schedule.includes(h) ? 'bg-red-400' : 'bg-univ-green/40 hover:bg-univ-green transition-colors cursor-pointer'}`}
-                        title={`${h}h:00`}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <button className="w-full py-4 bg-gray-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-univ-blue hover:-translate-y-1 transition-all shadow-xl shadow-blue-900/10 active:scale-95">
-                  Réserver Immédiatement
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+const STATUS_CONFIG = {
+  AVAILABLE: { label: 'Disponible', color: 'bg-green-100 text-green-700', icon: CheckCircle },
+  MAINTENANCE: { label: 'Maintenance', color: 'bg-orange-100 text-uds-orange', icon: Wrench },
+  OUT_OF_SERVICE: { label: 'Hors service', color: 'bg-red-100 text-red-600', icon: XCircle },
 };
 
-export default SearchRooms;
+const TYPE_LABELS = {
+  AMPHITHEATRE: 'Amphithéâtre',
+  CLASSROOM: 'Salle de cours',
+  LABORATORY: 'Laboratoire',
+};
+
+// Simulation — à remplacer par appel GraphQL Room Service
+const mockRooms = [
+  { id: 1, code: 'AMP-1000', name: 'Amphi 1000', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 1000, type: 'AMPHITHEATRE', status: 'AVAILABLE', equipments: ['Projecteur', 'Micro', 'Climatisation'] },
+  { id: 2, code: 'AMP-500', name: 'Amphi 500', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 500, type: 'AMPHITHEATRE', status: 'AVAILABLE', equipments: ['Projecteur', 'Micro'] },
+  { id: 3, code: 'S-204', name: 'Salle 204', building: 'Bâtiment B', campus: 'Campus Principal', capacity: 60, type: 'CLASSROOM', status: 'AVAILABLE', equipments: ['Tableau', 'Projecteur'] },
+  { id: 4, code: 'S-101', name: 'Salle 101', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 80, type: 'CLASSROOM', status: 'MAINTENANCE', equipments: ['Tableau'] },
+  { id: 5, code: 'LAB-1', name: 'Labo Informatique 1', building: 'Bâtiment C', campus: 'Campus Principal', capacity: 40, type: 'LABORATORY', status: 'AVAILABLE', equipments: ['Ordinateurs', 'Projecteur', 'Climatisation'] },
+  { id: 6, code: 'LAB-2', name: 'Labo Informatique 2', building: 'Bâtiment C', campus: 'Campus Principal', capacity: 35, type: 'LABORATORY', status: 'OUT_OF_SERVICE', equipments: ['Ordinateurs'] },
+  { id: 7, code: 'S-305', name: 'Salle 305', building: 'Bâtiment B', campus: 'Campus Principal', capacity: 50, type: 'CLASSROOM', status: 'AVAILABLE', equipments: ['Tableau', 'Climatisation'] },
+  { id: 8, code: 'AMP-200', name: 'Amphi 200', building: 'Bâtiment D', campus: 'Campus Principal', capacity: 200, type: 'AMPHITHEATRE', status: 'AVAILABLE', equipments: ['Projecteur', 'Micro', 'Climatisation'] },
+];
+
+export default function SearchRooms() {
+  const navigate = useNavigate();
+  const [filters, setFilters] = useState({
+    date: '',
+    from: '',
+    to: '',
+    capacity: '',
+    type: '',
+  });
+  const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState([]);
+
+  const handleChange = (e) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
+
+  const handleSearch = () => {
+    setLoading(true);
+    setSearched(true);
+    // Simulation d'un appel API
+    setTimeout(() => {
+      let filtered = mockRooms;
+      if (filters.type) filtered = filtered.filter(r => r.type === filters.type);
+      if (filters.capacity) filtered = filtered.filter(r => r.capacity >= parseInt(filters.capacity));
+      setResults(filtered);
+      setLoading(false);
+    }, 800);
+  };
+
+  const handleReserve = (room) => {
+    navigate('/teacher/reserve', { state: { room } });
+  };
+
+  const availableCount = results.filter(r => r.status === 'AVAILABLE').length;
+
+  return (
+    <div className="space-y-6">
+
+      {/* En-tête */}
+      <div>
+        <h1 className="text-2xl font-bold text-uds-blue">Rechercher une salle</h1>
+        <p className="text-uds-gray-dark text-sm mt-1">
+          Trouvez une salle disponible selon vos critères
+        </p>
+      </div>
+
+      {/* Filtres */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <Filter size={18} className="text-uds-blue" />
+          <h2 className="font-bold text-uds-blue">Critères de recherche</h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          {/*{/* Date *
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+              Date
+            </label>
+            <input
+              type="date"
+              name="date"
+              value={filters.date}
+              onChange={handleChange}
+              min={new Date().toISOString().split('T')[0]}
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-gray-100 bg-uds-gray outline-none focus:border-uds-blue focus:bg-white transition-all text-sm text-gray-700"
+            />
+          </div>
+
+          {/* Heure début *
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+              Heure de début
+            </label>
+            <input
+              type="time"
+              name="from"
+              value={filters.from}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-gray-100 bg-uds-gray outline-none focus:border-uds-blue focus:bg-white transition-all text-sm text-gray-700"
+            />
+          </div>
+
+          {/* Heure fin *
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+              Heure de fin
+            </label>
+            <input
+              type="time"
+              name="to"
+              value={filters.to}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-gray-100 bg-uds-gray outline-none focus:border-uds-blue focus:bg-white transition-all text-sm text-gray-700"
+            />
+          </div>
+
+          {/* Capacité minimale */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+              Capacité minimale
+            </label>
+            <input
+              type="number"
+              name="capacity"
+              value={filters.capacity}
+              onChange={handleChange}
+              placeholder="ex: 100"
+              min="1"
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-gray-100 bg-uds-gray outline-none focus:border-uds-blue focus:bg-white transition-all text-sm text-gray-700"
+            />
+          </div>
+
+          {/* Type de salle */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+              Type de salle
+            </label>
+            <select
+              name="type"
+              value={filters.type}
+              onChange={handleChange}
+              className="w-full px-4 py-2.5 rounded-xl border-2 border-gray-100 bg-uds-gray outline-none focus:border-uds-blue focus:bg-white transition-all text-sm text-gray-700"
+            >
+              {ROOM_TYPES.map(t => (
+                <option key={t.value} value={t.value}>{t.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Bouton recherche */}
+          <div className="flex items-end">
+            <button
+              onClick={handleSearch}
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-uds-blue text-white font-bold text-sm hover:bg-uds-blue-light transition-all shadow-md disabled:opacity-60"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <><Search size={16} /> Rechercher</>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Résultats */}
+      {searched && !loading && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-uds-blue text-lg">
+              Résultats
+              <span className="ml-2 text-sm font-normal text-uds-gray-dark">
+                {availableCount} salle(s) disponible(s) sur {results.length}
+              </span>
+            </h2>
+          </div>
+
+          {results.length === 0 ? (
+            <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
+              <div className="w-16 h-16 bg-uds-gray rounded-full flex items-center justify-center mx-auto mb-4">
+                <Search size={28} className="text-uds-gray-dark" />
+              </div>
+              <p className="text-uds-blue font-bold text-lg">Aucune salle trouvée</p>
+              <p className="text-uds-gray-dark text-sm mt-1">Modifiez vos critères et relancez la recherche</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {results.map((room) => {
+                const status = STATUS_CONFIG[room.status];
+                const StatusIcon = status.icon;
+                const isAvailable = room.status === 'AVAILABLE';
+                return (
+                  <div
+                    key={room.id}
+                    className={`bg-white rounded-2xl border shadow-sm overflow-hidden transition-all ${
+                      isAvailable
+                        ? 'border-gray-100 hover:border-uds-orange hover:shadow-md'
+                        : 'border-gray-100 opacity-70'
+                    }`}
+                  >
+                    {/* Header carte */}
+                    <div className="bg-uds-blue px-5 py-4">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="text-white font-bold">{room.name}</p>
+                          <p className="text-blue-200 text-xs mt-0.5">{room.code}</p>
+                        </div>
+                        <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${status.color}`}>
+                          <StatusIcon size={11} />
+                          {status.label}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Corps carte */}
+                    <div className="p-5 space-y-3">
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <MapPin size={14} className="text-uds-gray-dark shrink-0" />
+                        <span>{room.building} — {room.campus}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Users size={14} className="text-uds-gray-dark shrink-0" />
+                        <span>{room.capacity} places</span>
+                        <span className="mx-1 text-gray-300">·</span>
+                        <span className="text-xs bg-uds-blue/10 text-uds-blue px-2 py-0.5 rounded-full font-medium">
+                          {TYPE_LABELS[room.type]}
+                        </span>
+                      </div>
+
+                      {/* Équipements */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {room.equipments.map((eq) => (
+                          <span key={eq} className="text-xs bg-uds-gray text-uds-gray-dark px-2 py-0.5 rounded-full">
+                            {eq}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Bouton réserver */}
+                      <button
+                        onClick={() => handleReserve(room)}
+                        disabled={!isAvailable}
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all mt-2 ${
+                          isAvailable
+                            ? 'bg-uds-orange text-white hover:bg-uds-orange-light shadow-md'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        }`}
+                      >
+                        {isAvailable ? (
+                          <><CalendarPlus size={15} /> Réserver cette salle <ArrowRight size={14} /></>
+                        ) : (
+                          'Non disponible'
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* État initial */}
+      {!searched && (
+        <div className="bg-white rounded-2xl border border-dashed border-gray-200 p-12 text-center">
+          <div className="w-16 h-16 bg-uds-gray rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search size={28} className="text-uds-blue" />
+          </div>
+          <p className="text-uds-blue font-bold text-lg">Lancez une recherche</p>
+          <p className="text-uds-gray-dark text-sm mt-1">
+            Renseignez vos critères ci-dessus et cliquez sur Rechercher
+          </p>
+        </div>
+      )}
+
+    </div>
+  );
+}

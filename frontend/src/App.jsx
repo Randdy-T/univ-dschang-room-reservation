@@ -1,60 +1,103 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
+import Login from './pages/login';
+import NotFound from './pages/NotFound';
+import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
+
+// Enseignant
 import TeacherHome from './pages/teacher/TeacherHome';
 import SearchRooms from './pages/teacher/SearchRooms';
-import ImportStudents from './pages/admin/ImportStudents';
+import ReserveRoom from './pages/teacher/ReserveRoom';
+import MyBookings from './pages/teacher/MyBookings';
+
+// Étudiant
 import StudentHome from './pages/student/StudentHome';
+import Schedule from './pages/student/Schedule';
+import Notifications from './pages/student/Notifications';
+
+// Admin
+import AdminHome from './pages/admin/AdminHome';
+import CampusManagement from './pages/admin/CampusManagement';
+import RoomsManagement from './pages/admin/RoomsManagement';
+import ImportStudents from './pages/admin/ImportStudents';
+import UsersManagement from './pages/admin/UsersManagement';
+import AcademicStructure from './pages/admin/AcademicStructure';
+
+// Doyen / Chef de département
+import DeanHome from './pages/dean/DeanHome';
+import ExamScheduling from './pages/dean/ExamScheduling';
+import DeanPlanning from './pages/dean/DeanPlanning';
 
 function App() {
-  // 1. Définition des menus par rôle
-  const teacherMenu = [
-    { label: "Tableau de Bord", path: "/teacher" },
-    { label: "Réserver une Salle", path: "/teacher/reserve" },
-    { label: "Mes Réservations", path: "/teacher/my-bookings" },
-  ];
-
-  const studentMenu = [
-    { label: "Mon Emploi du Temps", path: "/student" },
-    { label: "Notifications", path: "/student/notifs" },
-  ];
-
-  const adminMenu = [
-    { label: "Gestion Campus", path: "/admin" },
-    { label: "Gestion des Salles", path: "/admin/rooms" },
-    { label: "Import Étudiants (Excel)", path: "/admin/import" },
-    { label: "Utilisateurs", path: "/admin/users" },
-  ];
-
   return (
     <Router>
       <Routes>
+
+        {/* Page publique */}
         <Route path="/" element={<Login />} />
 
         {/* ESPACE ENSEIGNANT */}
-        <Route path="/teacher" element={<DashboardLayout role="ENSEIGNANT" menuItems={teacherMenu} />}>
+        <Route
+          path="/teacher"
+          element={
+            <ProtectedRoute allowedRoles={['TEACHER']}>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<TeacherHome />} />
-          <Route path="reserve" element={<SearchRooms />} />
+          <Route path="search" element={<SearchRooms />} />
+          <Route path="reserve" element={<ReserveRoom />} />
+          <Route path="my-bookings" element={<MyBookings />} />
         </Route>
 
         {/* ESPACE ÉTUDIANT */}
-        <Route path="/student" element={<DashboardLayout role="ETUDIANT" menuItems={studentMenu} />}>
+        <Route
+          path="/student"
+          element={
+            <ProtectedRoute allowedRoles={['ETUDIANT']}>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<StudentHome />} />
+          <Route path="schedule" element={<Schedule />} />
+          <Route path="notifications" element={<Notifications />} />
         </Route>
 
         {/* ESPACE ADMIN */}
-        <Route path="/admin" element={<DashboardLayout role="ADMIN" menuItems={adminMenu} />}>
-          <Route index element={
-            <div className="space-y-6">
-              <h1 className="text-2xl font-bold">Console d'Administration</h1>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-10 bg-univ-blue text-white rounded-xl">Statistiques Globales</div>
-                <div className="p-10 bg-univ-green text-white rounded-xl">État des Serveurs</div>
-              </div>
-            </div>
-          } />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={['ADMIN']}>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminHome />} />
+          <Route path="campus" element={<CampusManagement />} />
+          <Route path="rooms" element={<RoomsManagement />} />
           <Route path="import" element={<ImportStudents />} />
+          <Route path="users" element={<UsersManagement />} />
+          <Route path="academic" element={<AcademicStructure />} />
         </Route>
+
+        {/* ESPACE CHEF DE DÉPARTEMENT / DOYEN */}
+        <Route
+          path="/dean"
+          element={
+            <ProtectedRoute allowedRoles={['HEAD_OF_DEPT']}>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<DeanHome />} />
+          <Route path="exam" element={<ExamScheduling />} />
+          <Route path="planning" element={<DeanPlanning />} />
+        </Route>
+
+        {/* PAGE 404 */}
+        <Route path="*" element={<NotFound />} />
 
       </Routes>
     </Router>
