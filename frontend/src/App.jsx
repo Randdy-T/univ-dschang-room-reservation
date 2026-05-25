@@ -22,6 +22,7 @@ import RoomsManagement from './pages/admin/RoomsManagement';
 import ImportStudents from './pages/admin/ImportStudents';
 import UsersManagement from './pages/admin/UsersManagement';
 import AcademicStructure from './pages/admin/AcademicStructure';
+import ReservationsManagement from './pages/admin/ReservationsManagement';
 
 // Doyen / Chef de département
 import DeanHome from './pages/dean/DeanHome';
@@ -79,6 +80,7 @@ function App() {
           <Route path="rooms" element={<RoomsManagement />} />
           <Route path="import" element={<ImportStudents />} />
           <Route path="users" element={<UsersManagement />} />
+          <Route path="reservations" element={<ReservationsManagement />} />
           <Route path="academic" element={<AcademicStructure />} />
         </Route>
 
