@@ -1,0 +1,87 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # ────────────────────────────────────────────
+        # ROUTE IAM SERVICE
+        # ────────────────────────────────────────────
+        - id: iam-service
+          uri: lb://iam-service
+          predicates:
+            - Path=/iam/**
+          filters:
+            - RewritePath=/iam/(?<segment>.*), /$\{segment}
+
+        # ────────────────────────────────────────────
+        # ROUTE ACADEMIC SERVICE
+        # ────────────────────────────────────────────
+        - id: academic-service
+          uri: lb://academic-service
+          predicates:
+            - Path=/academic/**
+          filters:
+            - RewritePath=/academic/(?<segment>.*), /$\{segment}
+
+        # ────────────────────────────────────────────
+        # ROUTE NOTIFICATION SERVICE
+        # ────────────────────────────────────────────
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/notification/**
+          filters:
+            - RewritePath=/notification/(?<segment>.*), /$\{segment}
+
+        # ────────────────────────────────────────────
+        # ROUTE ROOM SERVICE
+        # ────────────────────────────────────────────
+        - id: room-service
+          uri: lb://room-service
+          predicates:
+            - Path=/room/**
+          filters:
+            - RewritePath=/room/(?<segment>.*), /$\{segment}
+
+        # ────────────────────────────────────────────
+        # ROUTE SERVICE RESERVATION
+        # ────────────────────────────────────────────
+        - id: service-reservation
+          uri: lb://service-reservation
+          predicates:
+            - Path=/reservation/**
+          filters:
+            - RewritePath=/reservation/(?<segment>.*), /$\{segment}
+
+      # Load balancing avec Eureka
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+    # ────────────────────────────────────────────────
+    # EUREKA SERVICE DISCOVERY
+    # ────────────────────────────────────────────────
+    eureka:
+      client:
+        service-url:
+          defaultZone: http://localhost:8761/eureka
+        enabled: true
+
+# ─────────────────────────────────────────────────────
+# SERVER CONFIGURATION
+# ─────────────────────────────────────────────────────
+server:
+  port: 8080
+  error:
+    include-message: always
+
+# ─────────────────────────────────────────────────────
+# LOGGING
+# ─────────────────────────────────────────────────────
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: INFO
