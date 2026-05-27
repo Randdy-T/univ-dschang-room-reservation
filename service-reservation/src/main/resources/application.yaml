@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: service-reservation
+
+  cloud:
+    config:
+      enabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/reservation_db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 123456
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8083
