@@ -16,6 +16,7 @@ const reservationSchema = z.object({
   date: z.string().min(1, 'La date est requise'),
   from: z.string().min(1, "L'heure de début est requise"),
   to: z.string().min(1, "L'heure de fin est requise"),
+  description: z.string().min(3, 'Veuillez décrire votre réservation (min 3 caractères)'),
 }).refine((data) => data.from < data.to, {
   message: "L'heure de fin doit être après l'heure de début",
   path: ['to'],
@@ -322,6 +323,26 @@ export default function ReserveRoom() {
               </p>
             </div>
           )}
+
+          {/* Description */}
+<div>
+  <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
+    Description de la réservation
+  </label>
+  <textarea
+    {...register('description')}
+    rows={3}
+    placeholder="ex: Cours d'Algorithmique, CC de Systèmes d'Information, Conférence sur l'IA..."
+    className={`w-full px-4 py-3 rounded-xl border-2 bg-uds-gray outline-none transition-all text-sm text-gray-700 resize-none ${
+      errors.description
+        ? 'border-red-400'
+        : 'border-transparent focus:border-uds-blue focus:bg-white'
+    }`}
+  />
+  {errors.description && (
+    <p className="text-red-500 text-xs mt-1 ml-1">{errors.description.message}</p>
+  )}
+</div>
 
           {/* Bouton soumettre */}
           <button

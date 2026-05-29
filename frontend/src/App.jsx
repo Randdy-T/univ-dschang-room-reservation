@@ -29,6 +29,10 @@ import DeanHome from './pages/dean/DeanHome';
 import ExamScheduling from './pages/dean/ExamScheduling';
 import DeanPlanning from './pages/dean/DeanPlanning';
 
+// settings
+import Settings from './pages/settings/Settings';
+
+
 function App() {
   return (
     <Router>
@@ -50,6 +54,7 @@ function App() {
           <Route path="search" element={<SearchRooms />} />
           <Route path="reserve" element={<ReserveRoom />} />
           <Route path="my-bookings" element={<MyBookings />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* ESPACE ÉTUDIANT */}
@@ -64,6 +69,7 @@ function App() {
           <Route index element={<StudentHome />} />
           <Route path="schedule" element={<Schedule />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* ESPACE ADMIN */}
@@ -82,6 +88,7 @@ function App() {
           <Route path="users" element={<UsersManagement />} />
           <Route path="reservations" element={<ReservationsManagement />} />
           <Route path="academic" element={<AcademicStructure />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* ESPACE CHEF DE DÉPARTEMENT / DOYEN */}
@@ -96,6 +103,7 @@ function App() {
           <Route index element={<DeanHome />} />
           <Route path="exam" element={<ExamScheduling />} />
           <Route path="planning" element={<DeanPlanning />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* PAGE 404 */}

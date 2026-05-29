@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, MapPin, Users, Filter, CheckCircle, XCircle, Wrench, ArrowRight, CalendarPlus } from 'lucide-react';
+import {
+  Search, MapPin, Users, Filter, CheckCircle,
+  XCircle, Wrench, ArrowRight, CalendarPlus, Clock
+} from 'lucide-react';
 
 const ROOM_TYPES = [
   { value: '', label: 'Tous les types' },
@@ -21,16 +24,15 @@ const TYPE_LABELS = {
   LABORATORY: 'Laboratoire',
 };
 
-// Simulation — à remplacer par appel GraphQL Room Service
 const mockRooms = [
-  { id: 1, code: 'AMP-1000', name: 'Amphi 1000', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 1000, type: 'AMPHITHEATRE', status: 'AVAILABLE', equipments: ['Projecteur', 'Micro', 'Climatisation'] },
-  { id: 2, code: 'AMP-500', name: 'Amphi 500', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 500, type: 'AMPHITHEATRE', status: 'AVAILABLE', equipments: ['Projecteur', 'Micro'] },
-  { id: 3, code: 'S-204', name: 'Salle 204', building: 'Bâtiment B', campus: 'Campus Principal', capacity: 60, type: 'CLASSROOM', status: 'AVAILABLE', equipments: ['Tableau', 'Projecteur'] },
-  { id: 4, code: 'S-101', name: 'Salle 101', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 80, type: 'CLASSROOM', status: 'MAINTENANCE', equipments: ['Tableau'] },
-  { id: 5, code: 'LAB-1', name: 'Labo Informatique 1', building: 'Bâtiment C', campus: 'Campus Principal', capacity: 40, type: 'LABORATORY', status: 'AVAILABLE', equipments: ['Ordinateurs', 'Projecteur', 'Climatisation'] },
-  { id: 6, code: 'LAB-2', name: 'Labo Informatique 2', building: 'Bâtiment C', campus: 'Campus Principal', capacity: 35, type: 'LABORATORY', status: 'OUT_OF_SERVICE', equipments: ['Ordinateurs'] },
-  { id: 7, code: 'S-305', name: 'Salle 305', building: 'Bâtiment B', campus: 'Campus Principal', capacity: 50, type: 'CLASSROOM', status: 'AVAILABLE', equipments: ['Tableau', 'Climatisation'] },
-  { id: 8, code: 'AMP-200', name: 'Amphi 200', building: 'Bâtiment D', campus: 'Campus Principal', capacity: 200, type: 'AMPHITHEATRE', status: 'AVAILABLE', equipments: ['Projecteur', 'Micro', 'Climatisation'] },
+  { id: 1, code: 'AMP-1000', name: 'Amphi 1000', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 1000, type: 'AMPHITHEATRE', status: 'AVAILABLE', availableFrom: null, equipments: ['Projecteur', 'Micro', 'Climatisation'] },
+  { id: 2, code: 'AMP-500', name: 'Amphi 500', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 500, type: 'AMPHITHEATRE', status: 'AVAILABLE', availableFrom: null, equipments: ['Projecteur', 'Micro'] },
+  { id: 3, code: 'S-204', name: 'Salle 204', building: 'Bâtiment B', campus: 'Campus Principal', capacity: 60, type: 'CLASSROOM', status: 'MAINTENANCE', availableFrom: '14:00', equipments: ['Tableau', 'Projecteur'] },
+  { id: 4, code: 'S-101', name: 'Salle 101', building: 'Bâtiment A', campus: 'Campus Principal', capacity: 80, type: 'CLASSROOM', status: 'OUT_OF_SERVICE', availableFrom: null, equipments: ['Tableau'] },
+  { id: 5, code: 'LAB-1', name: 'Labo Info 1', building: 'Bâtiment C', campus: 'Campus Principal', capacity: 40, type: 'LABORATORY', status: 'AVAILABLE', availableFrom: null, equipments: ['Ordinateurs', 'Projecteur', 'Climatisation'] },
+  { id: 6, code: 'LAB-2', name: 'Labo Info 2', building: 'Bâtiment C', campus: 'Campus Principal', capacity: 35, type: 'LABORATORY', status: 'OUT_OF_SERVICE', availableFrom: null, equipments: ['Ordinateurs'] },
+  { id: 7, code: 'S-305', name: 'Salle 305', building: 'Bâtiment B', campus: 'Campus Principal', capacity: 50, type: 'CLASSROOM', status: 'AVAILABLE', availableFrom: null, equipments: ['Tableau', 'Climatisation'] },
+  { id: 8, code: 'AMP-200', name: 'Amphi 200', building: 'Bâtiment D', campus: 'Campus Principal', capacity: 200, type: 'AMPHITHEATRE', status: 'MAINTENANCE', availableFrom: '10:00', equipments: ['Projecteur', 'Micro', 'Climatisation'] },
 ];
 
 export default function SearchRooms() {
@@ -53,7 +55,6 @@ export default function SearchRooms() {
   const handleSearch = () => {
     setLoading(true);
     setSearched(true);
-    // Simulation d'un appel API
     setTimeout(() => {
       let filtered = mockRooms;
       if (filters.type) filtered = filtered.filter(r => r.type === filters.type);
@@ -89,7 +90,7 @@ export default function SearchRooms() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-          {/*{/* Date *
+          {/* Date */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
               Date
@@ -104,7 +105,7 @@ export default function SearchRooms() {
             />
           </div>
 
-          {/* Heure début *
+          {/* Heure début */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
               Heure de début
@@ -118,7 +119,7 @@ export default function SearchRooms() {
             />
           </div>
 
-          {/* Heure fin *
+          {/* Heure fin */}
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase tracking-wide">
               Heure de fin
@@ -255,11 +256,30 @@ export default function SearchRooms() {
                         ))}
                       </div>
 
+                      {/* Disponibilité */}
+                      {!isAvailable && room.availableFrom && (
+                        <div className="flex items-center gap-2 p-2.5 bg-orange-50 border border-orange-200 rounded-xl">
+                          <Clock size={14} className="text-uds-orange shrink-0" />
+                          <p className="text-xs text-uds-orange font-semibold">
+                            Disponible à partir de <span className="font-bold">{room.availableFrom}</span>
+                          </p>
+                        </div>
+                      )}
+
+                      {!isAvailable && !room.availableFrom && (
+                        <div className="flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-xl">
+                          <XCircle size={14} className="text-red-500 shrink-0" />
+                          <p className="text-xs text-red-500 font-semibold">
+                            Indisponible — aucune plage libre aujourd'hui
+                          </p>
+                        </div>
+                      )}
+
                       {/* Bouton réserver */}
                       <button
                         onClick={() => handleReserve(room)}
                         disabled={!isAvailable}
-                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all mt-2 ${
+                        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-sm transition-all ${
                           isAvailable
                             ? 'bg-uds-orange text-white hover:bg-uds-orange-light shadow-md'
                             : 'bg-gray-100 text-gray-400 cursor-not-allowed'

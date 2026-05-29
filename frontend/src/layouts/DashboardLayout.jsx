@@ -6,6 +6,8 @@ import {
   Calendar, ClipboardList, LogOut, Menu, X, GraduationCap
 } from 'lucide-react';
 import { useState } from 'react';
+import { Settings } from 'lucide-react';
+
 
 const MENUS = {
   TEACHER: [
@@ -13,11 +15,13 @@ const MENUS = {
     { label: 'Rechercher une salle', path: '/teacher/search', icon: Search },
     { label: 'Réserver une salle', path: '/teacher/reserve', icon: CalendarPlus },
     { label: 'Mes réservations', path: '/teacher/my-bookings', icon: List },
+    { label: 'Paramètres', path: '/teacher/settings', icon: Settings },
   ],
   ETUDIANT: [
     { label: 'Tableau de bord', path: '/student', icon: LayoutDashboard },
     { label: 'Emploi du temps', path: '/student/schedule', icon: Calendar },
     { label: 'Notifications', path: '/student/notifications', icon: Bell },
+    { label: 'Paramètres', path: '/student/settings', icon: Settings },
   ],
   ADMIN: [
     { label: 'Tableau de bord', path: '/admin', icon: LayoutDashboard },
@@ -26,11 +30,13 @@ const MENUS = {
     { label: 'Import étudiants', path: '/admin/import', icon: Upload },
     { label: 'Utilisateurs', path: '/admin/users', icon: Users },
     { label: 'Structure académique', path: '/admin/academic', icon: GraduationCap },
+    { label: 'Paramètres', path: '/admin/settings', icon: Settings },
   ],
   HEAD_OF_DEPT: [
     { label: 'Tableau de bord', path: '/dean', icon: LayoutDashboard },
     { label: 'Programmer un examen', path: '/dean/exam', icon: ClipboardList },
     { label: 'Planning', path: '/dean/planning', icon: Calendar },
+    { label: 'Paramètres', path: '/dean/settings', icon: Settings },
   ],
 };
 

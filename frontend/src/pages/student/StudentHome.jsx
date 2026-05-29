@@ -39,7 +39,7 @@ const mockStats = [
   { label: "Cours aujourd'hui", value: 2, icon: BookOpen, color: 'bg-uds-blue' },
   { label: 'Cette semaine', value: 8, icon: Calendar, color: 'bg-uds-orange' },
   { label: 'Notifications', value: 2, icon: Bell, color: 'bg-purple-500' },
-  { label: 'Crédits validés', value: 42, icon: GraduationCap, color: 'bg-green-500' },
+  //{ label: 'Crédits validés', value: 42, icon: GraduationCap, color: 'bg-green-500' },
 ];
 
 const NOTIF_CONFIG = {
